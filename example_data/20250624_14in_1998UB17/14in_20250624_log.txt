@@ -1,0 +1,26 @@
+LOCAL DATE:		24 June 2025
+LOCAL START TIME:	19:30   
+LOCAL END TIME:		02:55 6/25
+
+NAME(S):	KELLY LE
+GOAL(S):	26317 (1998 UB17)
+
+TRANSPARENCY:	Above Average
+SEEING:		Average 3/5
+TEMPERATURE:	86F to 95F
+HUMIDITY:	40% to 45%
+
+TELESCOPE:		14in Celestron SCT
+CAMERA:			SBIG ST-8
+Camera temp setpoint:	0C
+
+IMAGE LOG
+# frames	target		exposure length		filter
+1		focus Vega	0.05s			clear
+3		fov		30s			clear
+33		1998 UB17	300s			clear	seq start 23:16
+7 		dark		300s			n/a
+7		bias		n/a			n/a
+7		flat		2s			clear
+
+NOTES: Hit tree frame 33
