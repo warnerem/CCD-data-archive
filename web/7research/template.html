@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"[]>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en">
+<head>
+<title>UMD Astronomy Observatory: Research</title>
+
+<!--#include virtual="/openhouse/css-n-includes/1begin.inc"-->
+<!-- DataTables CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css"> -->
+
+<link rel="stylesheet" href="/openhouse/css-n-includes/jquery.dataTables.css" type="text/css">
+</head>
+
+<body>
+
+<div id="page-background-middle-texture">
+	<div id="page-background-glare-wrapper">
+	<div id="page-background-glare"></div>
+	</div>
+<div id="main">
+
+<!--#include virtual="/openhouse/css-n-includes/2header.inc"-->
+
+<!--#include virtual="/openhouse/css-n-includes/3menu.inc"-->
+<div class="box sheet">
+<div class="box-body sheet-body">
+
+<div class="layout-wrapper">
+<div class="content-layout">
+<div class="content-layout-row">
+
+<div class="layout-cell sidebar1">
+	
+	<!--#include virtual="/openhouse/css-n-includes/block-oh.inc"-->
+	
+	<!--#include virtual="/openhouse/css-n-includes/block-events.inc"-->
+	<div class="cleared"></div>
+</div><!-- close layout-cell sidebar1 -->
+
+<div class="layout-cell content">
+	<div class="box post">
+		<div class="box-body post-body">
+			<div class="post-inner article">
+			<h2 class="postheader">Data Archive</h2>
+				<div class="postcontent">
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%% BEGIN MAIN CONTENT HERE %%%%%%%%%%%%%%%%%%%%%%%%% -->
+<div id="content">
+<p>Some text about the archive!</p>
+
+	<!-- TODO: DataTable -->
+
+
+			<table id="obs_data" class="display">
+				<thead>
+					<tr>
+						<th>Select</th>
+						<th>View</th>
+						<th>Date</th>
+						<th>Telescope</th>
+						<th>Type</th>
+						<th>Target</th>
+						<th>Class</th>
+						<th>Observers</th>
+					</tr>
+				</thead>
+				<tbody>
+
+
+<?php
+	$servername = "localhost";
+	$username = "obsdatauser";
+	$password = "SNgoB00m";
+	$dbname = "umdastroobs";
+	$conn = new mysqli($servername, $username, $password, $dbname);
+	$sql = "SELECT * FROM data_archive";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows > 0) {
+	// output data of each row
+	while($row = $result->fetch_assoc()) {
+		$year = substr($row['obsdate'],0,4);
+		echo "<tr>
+			<!-- <td>Checkbox</td> -->
+			<td><a href='https://www.astro.umd.edu/openhouse/obs-CCD/" . $year . "/" . $row["url"] .".zip'>Download</a></td>
+			<td><a href='https://www.astro.umd.edu/openhouse/obs-CCD/" . $year . "/" . $row["url"] . "'>Browse</a></td>
+			<td>" . $row["obsdate"]. "</td>
+			<td>" . $row["telescope"]. "</td>
+			<td>" . $row["type"]. "</td>
+			<td>" . $row["target"]. "</td>
+			<td>" . $row["class"]. "</td>
+			<td>" . $row["observers"]. "</td>
+			</tr>";
+		}
+	}
+?>
+				</tbody>
+			</table>
+
+</div>
+
+
+
+
+
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%% END MAIN CONTENT HERE %%%%%%%%%%%%%%%%%%%%%%%%%% -->
+				</div><!-- close postcontent -->
+			<div class="cleared"></div>
+			</div><!-- close post-inner article -->
+		<div class="cleared"></div>
+		</div><!-- close box-body post-body -->
+	</div><!-- close box post -->
+<div class="cleared"></div>
+</div><!-- close layout-cell content -->
+
+
+
+</div><!-- close content-layout-row -->
+</div><!-- close content-layout -->
+</div><!-- close layout-wrapper -->
+
+
+<!--#include virtual="/openhouse/css-n-includes/4footer.inc"-->
+
+<div class="cleared"></div>
+</div><!-- close box-body sheet-body -->
+</div><!-- close box sheet -->
+<div class="cleared"></div>
+<!-- TODO: config??? -->
+<p class="page-footer">Updated: <!--#config timefmt="%d-%h-%Y" --><!--#echo var="LAST_MODIFIED" --></p>
+<div class="cleared"></div>
+</div><!-- close main -->
+</div><!-- close page-background-middle-texture -->
+
+<!-- DataTables -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
+
+<script>
+	$(document).ready( function () {
+		$('#obs_data').DataTable({
+			"order": [[ 2, "desc" ]]
+		});
+	} );
+</script>
+</body>
+</html>

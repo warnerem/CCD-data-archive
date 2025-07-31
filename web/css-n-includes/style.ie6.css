@@ -1,0 +1,178 @@
+/* begin Page */
+
+/* Created by Artisteer v3.1.0.46558 */
+
+#page-background-glare {display: none;}
+body {background-attachment: scroll;}
+#page-background-middle-texture {height: expression(b.clientHeight + 'px');
+	width: expression(document.body.clientWidth>1100?"100%":"1100px");}
+
+.cleared {width:1px;}
+/* Start Box */
+.box, .box-body {zoom:1;}
+/* End Box */
+/* Start Bar */
+.bar {zoom:1;}
+/* End Bar */
+/* end Page */
+
+/* begin Header */
+.header {zoom:expression(runtimeStyle.zoom=1,insertBefore(document.createElement('div'),firstChild).className='header-png',insertBefore(document.createElement('div'),firstChild).className='header-jpeg');
+	z-index: 1;}
+
+.header-png {position: absolute;
+	z-index:-2;
+	top: 0;
+	width:100%;
+	height: 126px;
+	background-image: url('/openhouse/webdings/header.png');
+	background-repeat: no-repeat;
+	background-position:top center;}
+
+.header-jpeg {position: absolute;
+	z-index:-1;
+	top: 0;
+	width:expression(parentNode.clientWidth - 2 * 6 + 'px');
+	left:6px;
+	height: 126px;
+	background-image: url('/openhouse/webdings/header.jpg');
+	background-repeat: no-repeat;
+	background-position: center center;}
+/* end Header */
+
+/* begin Menu */
+ul.hmenu, ul.hmenu ul, ul.hmenu li, ul.hmenu a {zoom:1;}
+
+.hmenu li.hmenuhover {z-index: 10000;}
+
+.hmenu .hmenuhoverUl {visibility: visible;
+	top: 100%;
+	left: 0;}
+
+.hmenu .hmenuhoverUL .hmenuhoverUl {top: 0;
+	left: 100%;}
+
+.hmenu ul li {float: left !important;
+	clear: both;
+	width: 100%;}
+
+.nav {zoom: 1;
+	height: 28px;
+	background:#990000;}
+
+/* end Menu */
+
+/* begin MenuItem */
+.hmenu a {display:inline-block;
+	color: #E8E7E9;
+	padding: 0 22px;
+	line-height: 26px;
+	text-align: center;}
+
+.hmenu a.active {color: {ActiveTextColor};}
+
+.hmenu a:hover, .hmenuhoverA, .hmenuhover a {color: #191A19;
+	background-color:#8A8792;}
+
+/* end MenuItem */
+
+/* begin MenuSeparator */
+ul.hmenu li {margin-left:expression(this.previousSibling==null?'0':'1px');}
+ul.hmenu li li{margin-left:0;}
+
+span.hmenu-separator {position:absolute;
+	display: block;
+	top:0;
+	left: -1px;
+	width: 1px;
+	height: 26px;
+	background: url('/openhouse/webdings/menuseparator.png') center center no-repeat;}
+/* end MenuSeparator */
+
+/* begin MenuSubItem */
+.hmenu ul a {color: #19181B !important;
+	float: left;}
+
+.hmenu ul a:hover, .hmenu ul .hmenuhover .hmenuhoverA {color: #E8E8E8 !important;
+	background-position: left bottom;
+	border-color: #625E68;
+	border-top-width: 1px !important;}
+
+/* end MenuSubItem */
+
+/* begin Box, Sheet */
+.sheet {background:#3A383E;}
+/* end Box, Sheet */
+
+/* begin Layout */
+.content-layout, .content-layout-row, .layout-cell {display: block;
+	zoom: 1;}
+
+.layout-cell {position:relative;
+	float: left;
+	clear: right;}
+/* end Layout */
+
+/* begin Box, Block */
+.block {background:#B4B6B4;}
+/* end Box, Block */
+
+/* begin BlockHeader */
+.blockheader {background:#FFCC00;}
+/* end BlockHeader */
+
+/* begin Box, BlockContent */
+.blockcontent {background:#B4B6B4;}
+
+.blockcontent-body ul li{height: 1%;}
+
+/* end Box, BlockContent */
+
+/* begin Button */
+.button-wrapper {zoom: 1;}
+
+.button-wrapper .button-l, .button-wrapper .button-r {display: none;}
+
+.button-wrapper .button {float: left;}
+/* end Button */
+
+/* begin Box, Post */
+.post {background:#E8E8E8;}
+/* end Box, Post */
+
+/* begin PostIcons, PostHeaderIcons */
+.postheadericons span{zoom: 1;}
+/* end PostIcons, PostHeaderIcons */
+
+/* begin PostBullets */
+.post ul li, .post ol ul li {height: 1%;
+	padding-left: 16px;
+	/* makes "ul li" not to align behind the image if they are in the same line */
+ overflow-x: visible;
+	overflow-y: hidden;}
+
+.post ul ol li {background: none;
+	padding-left: 0;
+	/* overrides overflow for "ul li" and sets the default value */
+ overflow: visible;}
+/* end PostBullets */
+
+/* begin PostIcons, PostFooterIcons */
+.postfootericons span{zoom: 1;}
+/* end PostIcons, PostFooterIcons */
+
+/* begin Footer */
+.footer-body{padding-right: 0;
+	zoom:1;}
+
+.footer {zoom:1;
+	background:#FFCC00;}
+
+.footer-text {height: 5px;}
+
+/* end Footer */
+
+/* begin LayoutCell, content */
+.sidebar2 {width: auto;}
+/* end LayoutCell, content */
+
