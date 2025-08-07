@@ -226,13 +226,13 @@ Base template (without user's data) checked by http://validator.w3.org : "This p
     fetch('/api/data')
       .then(res => {
         if (!res.ok) {
-          throw new Error(`Network response was not ok. Status: ${res.status}`);
+          throw new Error(``);
         }
         return res.json();
       })
       .then(data => {
         if (!Array.isArray(data) || data.length === 0) {
-          throw new Error("Data from API is not a valid array or is empty.");
+          throw new Error("");
         }
 
         const allColumnHeaders = Object.keys(data[0]);
@@ -286,7 +286,7 @@ Base template (without user's data) checked by http://validator.w3.org : "This p
       .catch(error => {
         console.error("Failed to fetch or process data:", error);
         const table = document.getElementById('data-table');
-        table.innerHTML = '<thead><tr><th>Error</th></tr></thead><tbody><tr><td>Error loading data. Please check the browser console (F12) for details.</td></tr></tbody>';
+        table.innerHTML = '<thead><tr><th>Error</th></tr></thead><tbody><tr><td>Error loading data</td></tr></tbody>';
       });
 </script>
 </div>
@@ -340,3 +340,4 @@ Base template (without user's data) checked by http://validator.w3.org : "This p
 </script>
 </body>
 </html>
+
