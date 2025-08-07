@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"[]>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en">
+<head>
+<title>UMD Astronomy Observatory: Research</title>
+
+<!--#include virtual="/openhouse/css-n-includes/1begin.inc"-->
+<!-- DataTables CSS -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css"> -->
+
+<link rel="stylesheet" href="/openhouse/css-n-includes/jquery.dataTables.css" type="text/css">
+</head>
+
+<body>
+
+<div id="page-background-middle-texture">
+	<div id="page-background-glare-wrapper">
+	<div id="page-background-glare"></div>
+	</div>
+<div id="main">
+
+<!--#include virtual="/openhouse/css-n-includes/2header.inc"-->
+
+<!--#include virtual="/openhouse/css-n-includes/3menu.inc"-->
+<div class="box sheet">
+<div class="box-body sheet-body">
+
+<div class="layout-wrapper">
+<div class="content-layout">
+<div class="content-layout-row">
+
+<div class="layout-cell sidebar1">
+	
+	<!--#include virtual="/openhouse/css-n-includes/block-oh.inc"-->
+	
+	<!--#include virtual="/openhouse/css-n-includes/block-events.inc"-->
+	<div class="cleared"></div>
+</div><!-- close layout-cell sidebar1 -->
+
+<div class="layout-cell content">
+	<div class="box post">
+		<div class="box-body post-body">
+			<div class="post-inner article">
+			<h2 class="postheader">Data Archive</h2>
+				<div class="postcontent">
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%% BEGIN MAIN CONTENT HERE %%%%%%%%%%%%%%%%%%%%%%%%% -->
+ <div id="content">
+<table id="data-table" class="display" style="width:100%">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+<script>
+    fetch('/api/data')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(``);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data) || data.length === 0) {
+          throw new Error("");
+        }
+
+        const allColumnHeaders = Object.keys(data[0]);
+        const headersToShow = allColumnHeaders.filter(header => header.includes('_display'));
+        const filePathColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('path'));
+        
+        const table = document.getElementById('data-table');
+        const thead = table.querySelector('thead');
+        const tbody = table.querySelector('tbody');
+        thead.innerHTML = '';
+        tbody.innerHTML = '';
+
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = '<th>Download</th><th>Browse</th>';
+
+        headersToShow.forEach(headerKey => {
+          const th = document.createElement('th');
+          const cleanTitle = headerKey
+            .replace(/_display/g, '')
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, l => l.toUpperCase());
+          th.textContent = cleanTitle;
+          headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        
+        data.forEach(rowObject => {
+          const tr = document.createElement('tr');
+          
+          const filePath = rowObject[filePathColumnName] || '';
+          const year = filePath ? filePath.substring(0, 4) : '';
+          
+          const downloadLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}.zip`;
+          const browseLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}`;
+
+          tr.innerHTML = `<td><a href="${downloadLink}">Download</a></td><td><a href="${browseLink}">Browse</a></td>`;
+
+          headersToShow.forEach(headerKey => {
+            const td = document.createElement('td');
+            td.textContent = rowObject[headerKey] || '';
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+        $('#data-table').DataTable({
+            "pageLength": 10
+        });
+
+      })
+      .catch(error => {
+        console.error("Failed to fetch or process data:", error);
+        const table = document.getElementById('data-table');
+        table.innerHTML = '<thead><tr><th>Error</th></tr></thead><tbody><tr><td>Error loading data</td></tr></tbody>';
+      });
+</script>
+</div>
+
+
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%% END MAIN CONTENT HERE %%%%%%%%%%%%%%%%%%%%%%%%%% -->
+				</div><!-- close postcontent -->
+			<div class="cleared"></div>
+			</div><!-- close post-inner article -->
+		<div class="cleared"></div>
+		</div><!-- close box-body post-body -->
+	</div><!-- close box post -->
+<div class="cleared"></div>
+</div><!-- close layout-cell content -->
+
+
+
+</div><!-- close content-layout-row -->
+</div><!-- close content-layout -->
+</div><!-- close layout-wrapper -->
+
+
+<!--#include virtual="/openhouse/css-n-includes/4footer.inc"-->
+
+<div class="cleared"></div>
+</div><!-- close box-body sheet-body -->
+</div><!-- close box sheet -->
+<div class="cleared"></div>
+<!-- TODO: config??? -->
+<p class="page-footer">Updated: <!--#config timefmt="%d-%h-%Y" --><!--#echo var="LAST_MODIFIED" --></p>
+<div class="cleared"></div>
+</div><!-- close main -->
+</div><!-- close page-background-middle-texture -->
+
+<!-- DataTables -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
+
+<script>
+	$(document).ready( function () {
+		$('#obs_data').DataTable({
+			"order": [[ 2, "desc" ]]
+		});
+	} );
+</script>
+</body>
+</html>
