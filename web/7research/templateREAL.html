@@ -48,73 +48,103 @@
         <thead></thead>
         <tbody></tbody>
     </table>
-<script>
-    fetch('/api/data')
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(``);
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (!Array.isArray(data) || data.length === 0) {
-          throw new Error("");
-        }
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-        const allColumnHeaders = Object.keys(data[0]);
-        const headersToShow = allColumnHeaders.filter(header => header.includes('_display'));
-        const filePathColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('path'));
-        
-        const table = document.getElementById('data-table');
-        const thead = table.querySelector('thead');
-        const tbody = table.querySelector('tbody');
-        thead.innerHTML = '';
-        tbody.innerHTML = '';
+    <script>
+        const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1dNfbGlGUQyahnOnTGAttpAUslrAX1JT_BJZCRbYG-nQ/gviz/tq?tqx=out:csv';
 
-        const headerRow = document.createElement('tr');
-        headerRow.innerHTML = '<th>Download</th><th>Browse</th>';
+        fetch(GOOGLE_SHEET_URL)
+          .then(res => {
+            if (!res.ok) {
+              throw new Error(`Network Error. Status: ${res.status}`);
+            }
+            return res.text();
+          })
+          .then(csvText => {
+            Papa.parse(csvText, {
+              header: true,
+              complete: function(results) {
+                const data = results.data.filter(row => Object.values(row).some(val => val !== ''));
 
-        headersToShow.forEach(headerKey => {
-          const th = document.createElement('th');
-          const cleanTitle = headerKey
-            .replace(/_display/g, '')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase());
-          th.textContent = cleanTitle;
-          headerRow.appendChild(th);
-        });
-        thead.appendChild(headerRow);
-        
-        data.forEach(rowObject => {
-          const tr = document.createElement('tr');
-          
-          const filePath = rowObject[filePathColumnName] || '';
-          const year = filePath ? filePath.substring(0, 4) : '';
-          
-          const downloadLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}.zip`;
-          const browseLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}`;
+                if (!Array.isArray(data) || data.length === 0) {
+                  throw new Error("Parsed data is empty or invalid");
+                }
+                
+                const allColumnHeaders = Object.keys(data[0]);
 
-          tr.innerHTML = `<td><a href="${downloadLink}">Download</a></td><td><a href="${browseLink}">Browse</a></td>`;
+                const readyColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('ready') && h.toLowerCase().includes('website'));
+                const filePathColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('path'));
+                
+                let headersToShow = allColumnHeaders.filter(header => header.toLowerCase().includes('display'));
 
-          headersToShow.forEach(headerKey => {
-            const td = document.createElement('td');
-            td.textContent = rowObject[headerKey] || '';
-            tr.appendChild(td);
+                if (headersToShow.length === 0) {
+                    const specialColumns = [readyColumnName, filePathColumnName];
+                    headersToShow = allColumnHeaders.filter(h => h && !specialColumns.includes(h));
+                }
+
+
+                const table = document.getElementById('data-table');
+                const thead = table.querySelector('thead');
+                const tbody = table.querySelector('tbody');
+                
+                thead.innerHTML = '';
+                tbody.innerHTML = '';
+                if ($.fn.DataTable.isDataTable('#data-table')) {
+                    $('#data-table').DataTable().destroy();
+                }
+
+
+                const headerRow = document.createElement('tr');
+                headerRow.innerHTML = '<th>Download</th><th>Browse</th>';
+
+                headersToShow.forEach(headerKey => {
+                  const th = document.createElement('th');
+                  const cleanTitle = headerKey
+                    .replace(/\[.*?\]/g, '')
+                    .replace(/_?display/ig, '')
+                    .replace(/_/g, ' ')
+                    .trim()
+                    .replace(/\b\w/g, l => l.toUpperCase());
+                  th.textContent = cleanTitle;
+                  headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+                
+                const filteredData = data.filter(row => readyColumnName && String(row[readyColumnName]).toLowerCase() === 'true');
+                
+                filteredData.forEach(rowObject => {
+                  const tr = document.createElement('tr');
+                  
+                  const filePath = rowObject[filePathColumnName] || '';
+                  const year = filePath ? filePath.substring(0, 4) : '';
+                  
+                  const downloadLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}.zip`;
+                  const browseLink = `https://www.astro.umd.edu/openhouse/obs-CCD/${year}/${filePath}`;
+
+                  tr.innerHTML = `<td><a href="${downloadLink}">Download</a></td><td><a href="${browseLink}">Browse</a></td>`;
+
+                  headersToShow.forEach(headerKey => {
+                    const td = document.createElement('td');
+                    td.textContent = rowObject[headerKey] || '';
+                    tr.appendChild(td);
+                  });
+                  tbody.appendChild(tr);
+                });
+
+                $('#data-table').DataTable({
+                    "pageLength": 10
+                });
+              }
+            });
+          })
+          .catch(error => {
+            console.error("Failed to fetch", error);
+            const table = document.getElementById('data-table');
+            table.innerHTML = '<thead><tr><th>Error</th></tr></thead><tbody><tr><td>Error loading data.</td></tr></tbody>';
           });
-          tbody.appendChild(tr);
-        });
-
-        $('#data-table').DataTable({
-            "pageLength": 10
-        });
-
-      })
-      .catch(error => {
-        console.error("Failed to fetch or process data:", error);
-        const table = document.getElementById('data-table');
-        table.innerHTML = '<thead><tr><th>Error</th></tr></thead><tbody><tr><td>Error loading data</td></tr></tbody>';
-      });
-</script>
+    </script>
 </div>
 
 
