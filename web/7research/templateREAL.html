@@ -47,22 +47,26 @@
 <table id="data-table" class="display" style="width:100%">
         <thead></thead>
         <tbody></tbody>
-    </table>
+    </table> 
+	 <!-- imports needed to get the CSV into JSON and to display the table -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <script>
+		//place to put the URL for the googlesheet which is then turned into a CSV
         const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1dNfbGlGUQyahnOnTGAttpAUslrAX1JT_BJZCRbYG-nQ/gviz/tq?tqx=out:csv';
 
         fetch(GOOGLE_SHEET_URL)
           .then(res => {
+			  //checks if we get a response from the google sheet
             if (!res.ok) {
               throw new Error(`Network Error. Status: ${res.status}`);
             }
             return res.text();
           })
           .then(csvText => {
+			  //paperparse library used to turn the CSV into a javascript object we can modtify
             Papa.parse(csvText, {
               header: true,
               complete: function(results) {
@@ -73,10 +77,11 @@
                 }
                 
                 const allColumnHeaders = Object.keys(data[0]);
-
+				//only displays the rob that are "ready" according to the google spreadsheet
                 const readyColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('ready') && h.toLowerCase().includes('website'));
                 const filePathColumnName = allColumnHeaders.find(h => h.toLowerCase().includes('path'));
-                
+
+				  //only shows the columns that have the keyword display in the googlesheet
                 let headersToShow = allColumnHeaders.filter(header => header.toLowerCase().includes('display'));
 
                 if (headersToShow.length === 0) {
@@ -84,7 +89,7 @@
                     headersToShow = allColumnHeaders.filter(h => h && !specialColumns.includes(h));
                 }
 
-
+				//creates the table
                 const table = document.getElementById('data-table');
                 const thead = table.querySelector('thead');
                 const tbody = table.querySelector('tbody');
@@ -101,6 +106,7 @@
 
                 headersToShow.forEach(headerKey => {
                   const th = document.createElement('th');
+					//cleans the column names to be ready for display
                   const cleanTitle = headerKey
                     .replace(/\[.*?\]/g, '')
                     .replace(/_?display/ig, '')
